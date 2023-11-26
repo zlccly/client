@@ -1,4 +1,3 @@
-import React from 'react';
 import { getStuListApi } from '../api/stuApi';
 import { useState, useEffect } from 'react';
 

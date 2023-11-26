@@ -1,7 +1,10 @@
 
 import { useState } from "react"
+import { addStuApi } from "../api/stuApi"
+import { useNavigate } from "react-router-dom"
 // 该组件有两个功能，添加和修改
 function Add(props) {
+    const navigate = useNavigate()
     // 创建表单状态
     const [stu, setStu] = useState({
         name: "",
@@ -10,7 +13,7 @@ function Add(props) {
         email: "",
         education: "",
         graductionSchool: "",
-        pprofession: "",
+        profession: "",
         profile: "",
     })
     function updateStuInfo(newInfo, key) {
@@ -23,6 +26,16 @@ function Add(props) {
     }
     function submitStuInfo(e) {
         e.preventDefault()
+        for (const key in stu) {
+            if (!stu[key]) {
+                alert(`${key}请完善表单的每一项`)
+                return
+            }
+        }
+        addStuApi(stu).then(() => {
+            // 跳转
+            navigate("/home")
+        })
         console.log(stu);
 
     }
