@@ -1,5 +1,6 @@
 import { getStuListApi } from '../api/stuApi';
 import { useState, useEffect } from 'react';
+import Alert from './Alert';
 
 function Home(props) {
     // 需要添加依赖性为空数组，表示只执行一次
@@ -27,6 +28,7 @@ function Home(props) {
 
     return (
         <div>
+            <Alert alert="添加学成成功"></Alert>
             <h1>学生列表</h1>
             <input
                 type="text"
