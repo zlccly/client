@@ -31,3 +31,13 @@ export function deleteStuByIdApi(id) {
         method: "DELETE",
     })
 }
+
+// 根据id编辑学生信息
+export function editStuByIdApi(id, data) {
+    return request({
+        url: `/students/${id}`,
+        method: "PATCH",
+        data
+    })
+}
+

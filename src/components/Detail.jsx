@@ -10,7 +10,7 @@ function Detail(props) {
     let navigate = useNavigate()
     useEffect(() => {
         getStuByIdApi(id).then(({ data }) => {
-            console.log(data, "根据ID获取信心")
+            console.log(data, "根据ID获取信息")
             setStu(data)
         })
     }, [id])

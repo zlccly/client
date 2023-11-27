@@ -1,9 +1,14 @@
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { addStuApi } from "../api/stuApi"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { getStuByIdApi, editStuByIdApi } from '../api/stuApi'
+
 // 该组件有两个功能，添加和修改
 function Add(props) {
+    // 根据是否有id来决定是添加还是修改
+    const { id } = useParams()
+
     const navigate = useNavigate()
     // 创建表单状态
     const [stu, setStu] = useState({
@@ -16,6 +21,14 @@ function Add(props) {
         profession: "",
         profile: "",
     })
+    useEffect(() => {
+        if (id) {
+            getStuByIdApi(id).then(({ data }) => {
+                console.log(data, "根据ID获取信息")
+                setStu(data)
+            })
+        }
+    }, [id])
     function updateStuInfo(newInfo, key) {
         if (key === "age" && isNaN(newInfo)) {
             return
@@ -32,21 +45,34 @@ function Add(props) {
                 return
             }
         }
-        addStuApi(stu).then(() => {
-            // 跳转
-            navigate("/home", {
-                state: {
-                    alert: "用户添加成功",
-                    type: "success"
-                }
+        if (id) {
+            editStuByIdApi(id, stu).then(() => {
+                // 跳转
+                navigate("/home", {
+                    state: {
+                        alert: "学生修改成功",
+                        type: "info"
+                    }
+                })
             })
-        })
+
+        } else {
+            addStuApi(stu).then(() => {
+                // 跳转
+                navigate("/home", {
+                    state: {
+                        alert: "学生添加成功",
+                        type: "success"
+                    }
+                })
+            })
+        }
         console.log(stu);
 
     }
     return (
         <div className='container'>
-            <h1 className="page-header">添加用户</h1>
+            <h1 className="page-header">{id ? "修改学生" : "添加学生"}</h1>
             <form id="myForm" onSubmit={submitStuInfo}>
                 <div className="well">
                     <div className="form-group">
@@ -56,7 +82,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "name")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户姓名'
+                            placeholder='请填写学生姓名'
                         />
                     </div>
                     <div className="form-group">
@@ -66,7 +92,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "age")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户年龄'
+                            placeholder='请填写学生年龄'
                         />
                     </div>
 
@@ -77,7 +103,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "phone")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户电话'
+                            placeholder='请填写学生电话'
                         />
                     </div>
                     <div className="form-group">
@@ -87,7 +113,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "email")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户邮箱'
+                            placeholder='请填写学生邮箱'
                         />
                     </div>
                     <div className="form-group">
@@ -97,7 +123,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "education")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户学历'
+                            placeholder='请填写学生学历'
                         />
                     </div>
                     <div className="form-group">
@@ -107,7 +133,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "graductionSchool")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户毕业学校'
+                            placeholder='请填写学生毕业学校'
                         />
                     </div>
                     <div className="form-group">
@@ -117,7 +143,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "profession")}
                             type="text"
                             className='form-control'
-                            placeholder='请填写用户职业'
+                            placeholder='请填写学生职业'
                         />
                     </div>
                     <div className="form-group">
@@ -129,7 +155,7 @@ function Add(props) {
                             onChange={(e) => updateStuInfo(e.target.value, "profile")}
                         ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-primary">确认添加</button>
+                    <button type="submit" className="btn btn-primary">{id ? "确认修改" : "确认添加"}</button>
                 </div>
             </form>
         </div>
