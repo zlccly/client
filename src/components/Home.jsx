@@ -1,8 +1,14 @@
+import React from 'react'
 import { getStuListApi } from '../api/stuApi';
 import { useState, useEffect } from 'react';
 import Alert from './Alert';
+import { useLocation, NavLink } from 'react-router-dom'
 
 function Home(props) {
+    const [stuList, setStuList] = useState([])
+    const [searchItem, setSeatchItem] = useState("")
+    const [alert, setAlert] = useState(null)
+    let location = useLocation()
     // 需要添加依赖性为空数组，表示只执行一次
     useEffect(() => {
         getStuListApi().then(({ data }) => {
@@ -10,25 +16,37 @@ function Home(props) {
             setStuList(data)
         })
     }, [])
-    const [stuList, setStuList] = useState([])
-    const [searchItem, setSeatchItem] = useState("")
+    // 用于获取跳转到Home组件时传递的state数据
+    useEffect(() => {
+        console.log(location.state, "获取location");
+        if (location.state) {
+            setAlert(location.state)
+        }
+    }, [location])
+
+
+
     const trs = stuList.map((item, index) => {
         return (
             <tr key={index}>
                 <td>{item.name}</td>
                 <td>{item.age}</td>
                 <td>{item.phone}</td>
-                <td>详情</td>
+                <td>
+                    <NavLink to={`/detail/${item.id}`}>详情</NavLink>
+                </td>
             </tr>
         )
     })
     function handleChange() {
     }
+    const showAlert = alert ? <Alert {...alert}></Alert> : null
+
 
 
     return (
         <div>
-            <Alert alert="添加学成成功"></Alert>
+            {showAlert}
             <h1>学生列表</h1>
             <input
                 type="text"

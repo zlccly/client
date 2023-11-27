@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, NavLink } from "react-router-dom"
 import Home from "./components/Home";
 import About from "./components/About";
 import Add from "./components/AddOrEdit";
+import Detail from "./components/Detail";
 import "./css/App.css"
 function App() {
   return (
@@ -40,7 +41,11 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/add" element={<Add />} />
+        <Route path="/detail/:id" element={<Detail />} />
         <Route path="/" element={<Navigate replace to="/home" />} />
+
+        
+        
       </Routes>
     </div>
   );

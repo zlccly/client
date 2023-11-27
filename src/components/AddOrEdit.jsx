@@ -34,7 +34,12 @@ function Add(props) {
         }
         addStuApi(stu).then(() => {
             // 跳转
-            navigate("/home")
+            navigate("/home", {
+                state: {
+                    alert: "用户添加成功",
+                    type: "success"
+                }
+            })
         })
         console.log(stu);
 

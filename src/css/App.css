@@ -30,3 +30,9 @@ tr,
 tr th {
     text-align: center;
 }
+
+.glyphicon::before{
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
+}
