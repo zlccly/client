@@ -5,10 +5,12 @@ import Alert from './Alert';
 import { useLocation, NavLink } from 'react-router-dom'
 
 function Home(props) {
-    const [stuList, setStuList] = useState([])
-    const [searchItem, setSeatchItem] = useState("")
+    const [stuList, setStuList] = useState([]) // 存储所有的数据
+    const [searchItem, setSearchItem] = useState("")
     const [alert, setAlert] = useState(null)
+    const [searchList, setSearchList] = useState("") // 存储搜索后的数据
     let location = useLocation()
+
     // 需要添加依赖性为空数组，表示只执行一次
     useEffect(() => {
         getStuListApi().then(({ data }) => {
@@ -16,6 +18,14 @@ function Home(props) {
             setStuList(data)
         })
     }, [])
+
+    // useEffect(() => {
+    //     getStuListApi().then(({ data }) => {
+    //         console.log(data, "数据结构");
+    //         setStuList(data)
+    //     })
+    // }, [searchItem])
+
     // 用于获取跳转到Home组件时传递的state数据
     useEffect(() => {
         console.log(location.state, "获取location");
@@ -26,7 +36,17 @@ function Home(props) {
 
 
 
-    const trs = stuList.map((item, index) => {
+
+    function changeHandle(name) {
+        setSearchItem(name)
+        const arr = stuList.filter(item => {
+            return item.name.match(searchItem)
+        })
+        setSearchList(arr)
+    }
+    // 搜索展示的列表
+    const list = searchItem ? searchList : stuList
+    const trs = list.map((item, index) => {
         return (
             <tr key={index}>
                 <td>{item.name}</td>
@@ -38,11 +58,7 @@ function Home(props) {
             </tr>
         )
     })
-    function handleChange() {
-    }
     const showAlert = alert ? <Alert {...alert}></Alert> : null
-
-
 
     return (
         <div>
@@ -52,7 +68,7 @@ function Home(props) {
                 type="text"
                 placeholder='搜索'
                 value={searchItem}
-                onChange={handleChange}
+                onChange={e => changeHandle(e.target.value)}
                 className="form-control"
             />
             <table className='table table-striped table-bordered'>
