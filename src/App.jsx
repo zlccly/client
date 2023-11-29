@@ -35,9 +35,6 @@ function App() {
         {/* 路由 */}
         <RouterConfig />
       </div>
-
-
-
     </div>
   );
 }

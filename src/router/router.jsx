@@ -25,7 +25,11 @@ function Router(props) {
                 {
                     path: "tel",
                     element: <Tel />
-                }
+                },
+                {
+                    path: "",
+                    element: <Navigate replace to="email"/>
+                },
             ]
         },
         {
