@@ -55,7 +55,12 @@ export const stuSlice = createSlice({
         },
         editStu: (state, { payload }) => {
             console.log(payload, "修改信息的信息")
-            state.stuList[payload.id] = payload.stu
+            for (let i = 0; i < state.stuList.length; i++) {
+                if (state.stuList[i].id === ~~payload.id) {
+                    state.stuList.splice(i, 1, payload.stu)
+                    break
+                }
+            }
         },
         // set: (state, { payload }) => {
         //     state.stuList = payload
