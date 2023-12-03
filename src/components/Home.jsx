@@ -1,24 +1,28 @@
 import React from 'react'
-import { getStuListApi } from '../api/stuApi';
+// import { getStuListApi } from '../api/stuApi';
 import { useState, useEffect } from 'react';
 import Alert from './Alert';
 import { useLocation, NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+// import { initStuList } from '../redux/stuSlice'
+import { getStuListAsync } from '../redux/stuSlice';
 
 function Home(props) {
-    const [stuList, setStuList] = useState([])
+    // const [stuList, setStuList] = useState([])
     const [searchItem, setSeatchItem] = useState("")
     const [alert, setAlert] = useState(null)
     let location = useLocation()
+    const dispatch = useDispatch()
+    const stuList = useSelector(state => state.stu.stuList)
+
     // 需要添加依赖性为空数组，表示只执行一次
     useEffect(() => {
-        getStuListApi().then(({ data }) => {
-            console.log(data, "数据结构");
-            setStuList(data)
-        })
-    }, [])
+        if (!stuList.length) {
+            dispatch(getStuListAsync())
+        }
+    }, [stuList, dispatch])
     // 用于获取跳转到Home组件时传递的state数据
     useEffect(() => {
-        console.log(location.state, "获取location");
         if (location.state) {
             setAlert(location.state)
         }

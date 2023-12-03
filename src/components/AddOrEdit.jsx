@@ -1,15 +1,16 @@
 
 import { useState, useEffect } from "react"
-import { addStuApi } from "../api/stuApi"
 import { useNavigate, useParams } from "react-router-dom"
-import { getStuByIdApi, editStuByIdApi } from '../api/stuApi'
+import { addStuListAsync, editStuListAsync } from '../redux/stuSlice'
+import { useSelector, useDispatch } from 'react-redux'
 
 // 该组件有两个功能，添加和修改
 function Add(props) {
+    const { stuList } = useSelector(state => state.stu)
     // 根据是否有id来决定是添加还是修改
     const { id } = useParams()
-
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     // 创建表单状态
     const [stu, setStu] = useState({
         name: "",
@@ -23,12 +24,14 @@ function Add(props) {
     })
     useEffect(() => {
         if (id) {
-            getStuByIdApi(id).then(({ data }) => {
-                console.log(data, "根据ID获取信息")
-                setStu(data)
-            })
+            // dispatch()
+            // getStuByIdApi(id).then(({ data }) => {
+            //     console.log(data, "根据ID获取信息")
+            //     setStu(data)
+            // })
+            setStu(stuList.filter(item => item.id === ~~id)[0])
         }
-    }, [id])
+    }, [id, stuList])
     function updateStuInfo(newInfo, key) {
         if (key === "age" && isNaN(newInfo)) {
             return
@@ -46,25 +49,21 @@ function Add(props) {
             }
         }
         if (id) {
-            editStuByIdApi(id, stu).then(() => {
-                // 跳转
-                navigate("/home", {
-                    state: {
-                        alert: "学生修改成功",
-                        type: "info"
-                    }
-                })
+            dispatch(editStuListAsync({id, stu}))
+            navigate("/home", {
+                state: {
+                    alert: "学生修改成功",
+                    type: "info"
+                }
             })
 
         } else {
-            addStuApi(stu).then(() => {
-                // 跳转
-                navigate("/home", {
-                    state: {
-                        alert: "学生添加成功",
-                        type: "success"
-                    }
-                })
+            dispatch(addStuListAsync(stu))
+            navigate("/home", {
+                state: {
+                    alert: "学生添加成功",
+                    type: "success"
+                }
             })
         }
         console.log(stu);

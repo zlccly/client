@@ -5,7 +5,6 @@ const request = axios.create({
 })
 // 设置请求拦截
 request.interceptors.request.use(config => {
-    console.log(config)
     // 请求方向
     return config
 })

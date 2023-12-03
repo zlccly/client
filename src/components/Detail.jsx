@@ -1,30 +1,31 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getStuByIdApi, deleteStuByIdApi } from '../api/stuApi'
+// import { getStuByIdApi, deleteStuByIdApi } from '../api/stuApi'
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteStuListAsync } from '../redux/stuSlice';
 
 // 学生详情组件
 function Detail(props) {
     const { id } = useParams()
     const [stu, setStu] = useState({})
+    const dispatch = useDispatch()
     let navigate = useNavigate()
+    const { stuList } = useSelector(state => state.stu)
+    console.log(stuList, "----dhfdshfi")
     useEffect(() => {
-        getStuByIdApi(id).then(({ data }) => {
-            console.log(data, "根据ID获取信息")
-            setStu(data)
-        })
-    }, [id])
+        const currentStu = stuList.filter(item => item.id === ~~id)
+        setStu(currentStu[0])
+    }, [stuList, id])
     function deleteStu(id) {
         if (window.confirm("你是否要删除此学生?")) {
-            deleteStuByIdApi(id).then(() => {
-                navigate("/home", {
-                    state: {
-                        alert: "学生删除成功",
-                        type: "info"
-                    }
-                })
+            dispatch(deleteStuListAsync(id))
+            navigate("/home", {
+                state: {
+                    alert: "学生删除成功",
+                    type: "info"
+                }
             })
-
         }
     }
     return (

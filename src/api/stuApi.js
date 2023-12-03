@@ -24,7 +24,7 @@ export function getStuByIdApi(id) {
     })
 }
 
-// 根据id获取学生详细信息
+// 根据ids删除学生
 export function deleteStuByIdApi(id) {
     return request({
         url: `/students/${id}`,
